@@ -59,6 +59,8 @@ void vendor_load_properties()
     property_set("ro.product.device", "kinzie");
 
     if (strstr(sku, "XT1580")) {
+
+	property_set("ro.product.name", "Moto X Force");
         property_set("ro.product.display", "Moto X Force");
         property_set("ro.telephony.default_network", "9");
         property_set("telephony.lteOnCdmaDevice", "0");
@@ -66,8 +68,8 @@ void vendor_load_properties()
         if (strstr(car, "reteu") || strstr(car, "retgb")) {
             // EU
             setSsim();
-            property_set("ro.build.description", "kinzie_reteu-user 6.0 MPK24.78-8 10 release-keys");
-            property_set("ro.build.fingerprint", "motorola/kinzie_reteu/kinzie:6.0/MPK24.78-8/10:user/release-keys");
+            property_set("ro.build.description", "kinzie_reteu-user 6.0.1 MPKS24.107-54-6 7 release-keys");
+            property_set("ro.build.fingerprint", "motorola/kinzie_reteu/kinzie:6.0.1/MPKS24.107-54-6/7:user/release-keys");
             property_set("ro.fsg-id", "emea");
         } else if (strstr(car, "retbr") || strstr(car, "retla")) {
             /* Brazil -- LATAM*/
