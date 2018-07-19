@@ -13,7 +13,7 @@ $(call inherit-product, vendor/cm/config/nfc_enhanced.mk)
 DEVICE_PACKAGE_OVERLAYS += device/motorola/kinzie/overlay
 
 ## Device identifier. This must come after all inclusions
-PRODUCT_NAME := lineage_kinzie
+PRODUCT_NAME := aokp_kinzie
 PRODUCT_BRAND := motorola
 PRODUCT_DEVICE := kinzie
 PRODUCT_MODEL := XT1581
