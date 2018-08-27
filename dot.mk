@@ -5,15 +5,15 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 $(call inherit-product, device/motorola/kinzie/device.mk)
 
 # Inherit some common CM stuff.
-$(call inherit-product, vendor/cm/config/common_full_phone.mk)
+$(call inherit-product, vendor/dot/config/common_full_phone.mk)
 
 # Enhanced NFC
-$(call inherit-product, vendor/cm/config/nfc_enhanced.mk)
+$(call inherit-product, vendor/dot/config/nfc_enhanced.mk)
 
 DEVICE_PACKAGE_OVERLAYS += device/motorola/kinzie/overlay
 
 ## Device identifier. This must come after all inclusions
-PRODUCT_NAME := cm_kinzie
+PRODUCT_NAME := dot_kinzie
 PRODUCT_BRAND := Android
 PRODUCT_DEVICE := kinzie
 PRODUCT_MODEL := XT1581
