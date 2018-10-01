@@ -16,51 +16,61 @@
 
 package com.cyanogenmod.settings.device;
 
-import java.util.List;
-
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.util.Log;
 
-public class CameraActivationSensor implements SensorEventListener, UpdatedStateNotifier {
-    private static final String TAG = "CMActions-CameraSensor";
-
-    private static final int TURN_SCREEN_ON_WAKE_LOCK_MS = 500;
+public class ProximitySensor implements ScreenStateNotifier, SensorEventListener {
+    private static final String TAG = "CMActions-ProximitySensor";
 
     private final CMActionsSettings mCMActionsSettings;
     private final SensorHelper mSensorHelper;
-
+    private final SensorAction mSensorAction;
     private final Sensor mSensor;
 
-    private boolean mIsEnabled;
+    private boolean mEnabled;
 
-    public CameraActivationSensor(CMActionsSettings cmActionsSettings, SensorHelper sensorHelper) {
+    private boolean mSawNear = false;
+
+    public ProximitySensor(CMActionsSettings cmActionsSettings, SensorHelper sensorHelper,
+                SensorAction action) {
         mCMActionsSettings = cmActionsSettings;
         mSensorHelper = sensorHelper;
-        mSensor = sensorHelper.getCameraActivationSensor();
-        mSensorHelper.registerListener(mSensor, this);
+        mSensorAction = action;
+
+        mSensor = sensorHelper.getProximitySensor();
     }
 
     @Override
-    public synchronized void updateState() {
-        if (mCMActionsSettings.isCameraGestureEnabled() && !mIsEnabled) {
-            Log.d(TAG, "Enabling");
-            mIsEnabled = true;
-        } else if (! mCMActionsSettings.isCameraGestureEnabled() && mIsEnabled) {
+    public void screenTurnedOn() {
+        if (mEnabled) {
             Log.d(TAG, "Disabling");
-            mIsEnabled = false;
+            mSensorHelper.unregisterListener(this);
+            mEnabled = false;
+        }
+    }
+
+    @Override
+    public void screenTurnedOff() {
+        if (mCMActionsSettings.isIrWakeupEnabled() && !mEnabled) {
+            Log.d(TAG, "Enabling");
+            mSensorHelper.registerListener(mSensor, this);
+            mEnabled = true;
         }
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        Log.d(TAG, "activate camera");
-        if (mIsEnabled) mCMActionsSettings.cameraAction();
+        boolean isNear = event.values[0] < mSensor.getMaximumRange();
+        if (mSawNear && !isNear) {
+            Log.d(TAG, "wave triggered");
+            mSensorAction.action();
+        }
+        mSawNear = isNear;
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    public void onAccuracyChanged(Sensor mSensor, int accuracy) {
     }
 }
